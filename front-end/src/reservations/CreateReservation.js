@@ -21,7 +21,6 @@ const CreateReservation = () =>{
 
     const submitHandler = async (event) =>{
         event.preventDefault();
-        console.log('submitted')
         const ac = new AbortController();
         await createReservation(formData, ac.signal);
         history.push(`/dashboard?date=${formData.reservation_date}`)
@@ -88,8 +87,6 @@ const CreateReservation = () =>{
                                 className='form-control w-25'
                                 onChange={changeHandler}
                                 value={formData.reservation_time}
-                                // min={today() ? }
-                                max='21:30:00'
                                 required
                                 />
                         </div>
