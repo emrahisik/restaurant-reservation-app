@@ -2,12 +2,21 @@ import React, {useState} from "react";
 import { today } from "../utils/date-time";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
+import ErrorAlert from "../layout/ErrorAlert"
 
 
 
 const CreateReservation = () =>{
-    const initialFormData ={first_name:'', last_name:'', mobile_number:'', reservation_date:'', reservation_time:'', people:'',};
-    const [formData, setFormData] = useState(initialFormData);
+    const initialFormData = {
+      first_name: "",
+      last_name: "",
+      mobile_number: "",
+      reservation_date: "",
+      reservation_time: "",
+      people: "",
+    };
+    const [formData, setFormData] = useState({...initialFormData});
+    const [formError, setFormError] = useState(null);
 
     
     
@@ -15,16 +24,21 @@ const CreateReservation = () =>{
     const history = useHistory()
     
     //set setFormData as event.target key-value pairs
-    const changeHandler = (event) =>{
-        setFormData({...formData, [event.target.name]: event.target.value})
+    const changeHandler = ({target}) =>{
+        setFormData({...formData, [target.name]: target.name === "people" ? Number(target.value) : target.value})
     }; 
 
     const submitHandler = async (event) =>{
         event.preventDefault();
-        const ac = new AbortController();
-        await createReservation(formData, ac.signal);
-        history.push(`/dashboard?date=${formData.reservation_date}`)
-        setFormData(initialFormData);
+        try{
+            const ac = new AbortController();
+            const reservation = await createReservation(formData, ac.signal);
+            console.log(reservation)
+            setFormData({...initialFormData});
+            history.push(`/dashboard?date=${reservation.reservation_date}`); 
+        }catch(error){
+            setFormError(error) 
+        }      
     };
 
     const form =    <form onSubmit={submitHandler}>
@@ -100,14 +114,18 @@ const CreateReservation = () =>{
                                 onChange={changeHandler}
                                 value={formData.people}
                                 min='1'
-                                required={true}
+                                required
                                 />
                         </div>
                         <button type="reset" className="btn btn-secondary mt-3 mx-3" onClick={() => history.goBack()}>Cancel</button>
                         <button type="submit" className="btn btn-primary mt-3" >Submit</button>
                     </form>
                 
-    return <>{form}</>
+    return  <>
+                <h2>Create Reservation</h2>
+                <ErrorAlert error={formError} />
+                {form}
+            </>
 };
 
 export default CreateReservation;
