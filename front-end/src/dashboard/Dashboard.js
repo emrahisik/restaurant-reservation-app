@@ -23,6 +23,40 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
   //console.log(reservations)
+
+  const reservation = reservations.map((reservation, index) => {
+    return (
+      <tr>
+        <th scope="row">{index + 1}</th>
+        <td>{reservation.first_name}</td>
+        <td>{reservation.last_name}</td>
+        <td>{reservation.mobile_number}</td>
+        <td>{reservation.reservation_date}</td>
+        <td>{reservation.reservation_time}</td>
+        <td >{reservation.people}</td>
+      </tr>
+    );
+
+})
+
+
+const content = (
+  <table className="table table-striped table-dark">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Mobile Number</th>
+        <th scope="col">Date</th>
+        <th scope="col">Time</th>
+        <th scope="col">Number of People</th>
+      </tr>
+    </thead>
+    <tbody>{reservation}</tbody>
+  </table>
+);
+
   return (
     <main>
       <h1>Dashboard</h1>
@@ -30,7 +64,7 @@ function Dashboard({ date }) {
         <h4 className="mb-0">Reservations for date</h4>
       </div>
       <ErrorAlert error={reservationsError} />
-      {JSON.stringify(reservations)}
+      {content}
     </main>
   );
 }
