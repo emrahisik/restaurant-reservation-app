@@ -25,7 +25,7 @@ function Dashboard({ date }) {
 
   const reservation = reservations.map((reservation, index) => {
     return (
-      <tr>
+      <tr key={index+1}>
         <th scope="row">{index + 1}</th>
         <td>{reservation.first_name}</td>
         <td>{reservation.last_name}</td>
