@@ -47,14 +47,14 @@ const hasOnlyValidFields = (req, res, next) => {
 
 
 //Create an error message collector 
-let errorMessages = "";
+let errorMessages = [];
 
 const isFirstNameValid = (req, res, next) => {
   const {
     data: { first_name },
   } = req.body;
   if (!first_name || !first_name.trim()) {
-    errorMessages += "|" + "A first_name is required!";
+    errorMessages.push("A first_name is required!");
   }
 };
 const isLastNameValid = (req, res, next) => {
@@ -62,7 +62,7 @@ const isLastNameValid = (req, res, next) => {
     data: { last_name },
   } = req.body;
   if (!last_name || !last_name.trim()) {
-    errorMessages += "|" + "A last_name is required!";
+    errorMessages.push("A last_name is required!");
   }
 };
 
@@ -71,7 +71,7 @@ const isMobileValid = (req, res, next) => {
     data: { mobile_number },
   } = req.body;
   if (!mobile_number || !mobile_number.trim()) {
-    errorMessages += "|" + "A mobile_number is required!";
+    errorMessages.push("A mobile_number is required!");
   }
 };
 
@@ -80,7 +80,7 @@ const isDateValid = (req, res, next) => {
     data: { reservation_date },
   } = req.body;
   if (!reservation_date || !Date.parse(reservation_date)) {
-    errorMessages += "|" + "reservation_date is either invalid or empty!";
+    errorMessages.push("reservation_date is either invalid or empty!");
   }
 };
 
@@ -90,7 +90,7 @@ const isTimeValid = (req, res, next) => {
   } = req.body;
   const date = new Date(reservation_date + " " + reservation_time);
   if (!reservation_time || !date.getHours()) {
-    errorMessages += "|" + "reservation_time is either invalid or empty!";
+    errorMessages.push("reservation_time is either invalid or empty!");
   }
 };
 
@@ -99,25 +99,25 @@ const isPeopleValid = (req, res, next) => {
     data: { people },
   } = req.body;
   if (!people || typeof people !== "number" || people < 1) {
-    errorMessages +=
-      "|" + "A number of people is required and must be at least 1!";
+    errorMessages.push("A number of people is required and must be at least 1!");
   }
 };
 
 const hasProperties = (req, res, next) => {
-  errorMessages = "";
+  errorMessages = [];
   isFirstNameValid(req, res, next);
   isLastNameValid(req, res, next);
   isMobileValid(req, res, next);
   isDateValid(req, res, next);
   isTimeValid(req, res, next);
   isPeopleValid(req, res, next);
-  if (!errorMessages) {
+  if (!errorMessages.length) {
     next();
   } else {
+    const message = errorMessages.join("|")
     next({
       status: 400,
-      message: errorMessages,
+      message,
     });
   }
 };
