@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+import { today, next, previous } from "../utils/date-time"
 
 /**
  * Defines the dashboard page.
@@ -11,13 +12,26 @@ import ErrorAlert from "../layout/ErrorAlert";
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const [currentDate, setCurrentDate] = useState(date)
 
-  useEffect(loadDashboard, [date]);
+  const clickHandler = ({target}) =>{
+    if(target.name === "previous"){
+      setCurrentDate(previous(currentDate));
+    };
+    if(target.name === "today"){
+      setCurrentDate(today());
+    };
+    if(target.name === "next"){
+      setCurrentDate(next(currentDate));
+    };
+  };
+
+  useEffect(loadDashboard, [currentDate]);
 
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
-    listReservations({ date }, abortController.signal)
+    listReservations({ date:currentDate }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
@@ -59,6 +73,9 @@ const content = (
   return (
     <main>
       <h1>Dashboard</h1>
+      <button type="button" name="previous" onClick={clickHandler} className="btn btn-dark mr-1"><span className="oi oi-arrow-thick-left"></span> Previous</button>
+      <button type="button" name="today" onClick={clickHandler} className="btn btn-dark">Today</button>
+      <button type="button" name="next" onClick={clickHandler} className="btn btn-dark ml-1">Next <span className="oi oi-arrow-thick-right"></span></button>
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for date</h4>
       </div>
