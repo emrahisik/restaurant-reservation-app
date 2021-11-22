@@ -26,10 +26,10 @@ function ErrorAlert({ error }) {
   }
 
   return (
-    <div className="alert alert-danger m-2">
+    error && (<div className="alert alert-danger m-2">
       Encountered following issues:
       {content}
-    </div>
+    </div>)
   );
 }
 
