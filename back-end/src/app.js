@@ -1,5 +1,4 @@
 const path = require("path");
-const morgan = require("morgan")
 
 require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
 
