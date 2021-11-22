@@ -7,8 +7,10 @@ const service = require("./reservations.service");
  */
 
 
-//Check if request body exists and has only valid fields
-
+/**
+ * Checks if request body exists
+ * if not, returns bad request status and error message
+ */
 const reservationDataExists = (req, res, next) => {
   const { data } = req.body;
   if (!data || !Object.keys(data).length) {
@@ -16,10 +18,11 @@ const reservationDataExists = (req, res, next) => {
       status: 400,
       message: "Reservation data is required!",
     });
-  }
+  };
   next();
 };
 
+//Array of the only valid fields for reservation
 const validFields = [
   "first_name",
   "last_name",
@@ -29,7 +32,10 @@ const validFields = [
   "people",
 ];
 
-//Check if request body has only valid fields
+/**
+ * Checks if request body has only valid fields
+ * if not, returns bad request status and error message
+ */
 const hasOnlyValidFields = (req, res, next) => {
   const { data } = req.body;
   const invalidFields = Object.keys(data).filter(
@@ -41,80 +47,95 @@ const hasOnlyValidFields = (req, res, next) => {
       status: 400,
       message: `Invalid fields: ${invalidFields.join(", ")}`,
     });
-  }
+  };
   next();
 };
 
 
+/**
+ * A set of validation helper functions is created
+ * Each function pushes an error message to error 
+ * collection array if failure conditions are met
+ * Otherwise they process nothing.
+ */
+
 //Create an error message collector 
 let errorMessages = [];
 
-const isFirstNameValid = (req, res, next) => {
-  const {
-    data: { first_name },
-  } = req.body;
+//Validates firstname
+const isFirstNameValid = (first_name) => {
   if (!first_name || !first_name.trim()) {
     errorMessages.push("A first_name is required!");
-  }
+  };
 };
-const isLastNameValid = (req, res, next) => {
-  const {
-    data: { last_name },
-  } = req.body;
+
+//Validates last name
+const isLastNameValid = (last_name) => {
   if (!last_name || !last_name.trim()) {
     errorMessages.push("A last_name is required!");
-  }
+  };
 };
 
-const isMobileValid = (req, res, next) => {
-  const {
-    data: { mobile_number },
-  } = req.body;
+//Validates mobile number
+const isMobileValid = (mobile_number) => {
   if (!mobile_number || !mobile_number.trim()) {
     errorMessages.push("A mobile_number is required!");
-  }
+  };
 };
 
-const isDateValid = (req, res, next) => {
-  const {
-    data: { reservation_date },
-  } = req.body;
+//Validates reservation date
+const isDateValid = (reservation_date) => {
   if (!reservation_date || !Date.parse(reservation_date)) {
     errorMessages.push("reservation_date is either invalid or empty!");
-  }
+  };
 };
 
-const isTimeValid = (req, res, next) => {
-  const {
-    data: { reservation_date, reservation_time },
-  } = req.body;
+//Validates reservation time
+const isTimeValid = (reservation_date, reservation_time) => {
   const date = new Date(reservation_date + " " + reservation_time);
   if (!reservation_time || !date.getHours()) {
     errorMessages.push("reservation_time is either invalid or empty!");
-  }
+  };
 };
 
-const isPeopleValid = (req, res, next) => {
-  const {
-    data: { people },
-  } = req.body;
+//Validates number of people (size of party)
+const isPeopleValid = (people) => {
   if (!people || typeof people !== "number" || people < 1) {
     errorMessages.push("A number of people is required and must be at least 1!");
   }
 };
 
+
+/**
+ * hasProperties function invokes validation functions
+ * After every form submission errorMessages collector
+ * is reset to an empty array. If any validation fails,
+ * returns a bad request status along with error message
+ * collection. 
+ */
+
 const hasProperties = (req, res, next) => {
   errorMessages = [];
-  isFirstNameValid(req, res, next);
-  isLastNameValid(req, res, next);
-  isMobileValid(req, res, next);
-  isDateValid(req, res, next);
-  isTimeValid(req, res, next);
-  isPeopleValid(req, res, next);
+  const {
+    data: {
+      first_name,
+      last_name,
+      mobile_number,
+      reservation_date,
+      reservation_time,
+      people,
+    },
+  } = req.body;
+  isFirstNameValid(first_name);
+  isLastNameValid(last_name);
+  isMobileValid(mobile_number);
+  isDateValid(reservation_date);
+  isTimeValid(reservation_date, reservation_time);
+  isPeopleValid(people);
   if (!errorMessages.length) {
     next();
   } else {
-    const message = errorMessages.join("|")
+    const message = errorMessages.join("|");
     next({
       status: 400,
       message,
@@ -122,81 +143,6 @@ const hasProperties = (req, res, next) => {
   }
 };
 
-// ///////
-
-// // Check if the name is valid
-// const isNameValid = (req, res, next) => {
-//   const { data: { first_name, last_name } } = req.body;
-//   if (!first_name || !first_name.trim()) {
-//     next({
-//       status: 400,
-//       message: "A first_name is required!",
-//     });
-//   }
-//   if (!last_name || !last_name.trim()) {
-//     next({
-//       status: 400,
-//       message: "A last_name is required!",
-//     });
-//   }
-//   return true;
-// };
-
-// const isMobileValid = (req, res, next) => {
-//   const { data:{ mobile_number } } = req.body;
-//   if( !mobile_number || !mobile_number.trim() ){
-//       next({
-//           status: 400,
-//           message: "A mobile_number is required!",
-//       });
-//   };
-//   return true;
-// };
-
-// const isDateValid = (req, res, next) => {
-//   const { data:{ reservation_date } } = req.body;
-//   if( !reservation_date || !Date.parse(reservation_date) ){
-//       next({
-//           status: 400,
-//           message: "reservation_date is either invalid or empty!",
-//       });
-//   };
-//   return true;
-// };
-
-// const isTimeValid = (req, res, next) => {
-//   const { data:{ reservation_date, reservation_time } } = req.body;
-//   const date = new Date(reservation_date + ' ' + reservation_time)
-//   if( !reservation_time || !date.getHours() ){
-//       next({
-//           status: 400,
-//           message: "reservation_time is either invalid or empty!",
-//       });
-//   };
-//   return true;
-// };
-
-// const isPeopleValid = (req, res, next) => {
-//   const { data:{ people } } = req.body;
-//   if( !people || typeof(people) !== 'number' || people<1 ){
-//       next({
-//           status: 400,
-//           message: "A number of people is required and must be at least 1!",
-//       });
-//   };
-//   return true;
-// };
-
-// const hasProperties = (req, res, next) => {
-//   return(
-//     isNameValid(req, res, next)&&
-//     isMobileValid(req, res, next)&&
-//     isDateValid(req, res, next)&&
-//     isTimeValid(req, res, next)&&
-//     isPeopleValid(req, res, next)&&
-//     next()
-//   );
-// };
 
 /**
  * List handler for reservation resources
