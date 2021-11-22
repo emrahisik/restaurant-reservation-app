@@ -83,19 +83,28 @@ const isMobileValid = (mobile_number) => {
   };
 };
 
-//Validates reservation date
-const isDateValid = (reservation_date) => {
+//Validates reservation date and time
+//Date can't be in past and on Tuesdays any time
+const isDateValid = (reservation_date, reservation_time) => {
   if (!reservation_date || !Date.parse(reservation_date)) {
     errorMessages.push("reservation_date is either invalid or empty!");
   };
-};
 
-//Validates reservation time
-const isTimeValid = (reservation_date, reservation_time) => {
   const date = new Date(reservation_date + " " + reservation_time);
   if (!reservation_time || !date.getHours()) {
     errorMessages.push("reservation_time is either invalid or empty!");
   };
+
+  const moment = new Date(Date.now());
+  const today = `${moment.getFullYear()}-${moment.getMonth()+1}-${moment.getDate()}`;
+  
+  if(reservation_date < today){
+    errorMessages.push("Chosen date is in the past. Choose a date in the future!");
+  };
+
+  if(date.getDay() == 2){
+    errorMessages.push("The restaurant is closed on Tuesdays!")
+  }
 };
 
 //Validates number of people (size of party)
@@ -129,8 +138,7 @@ const hasProperties = (req, res, next) => {
   isFirstNameValid(first_name);
   isLastNameValid(last_name);
   isMobileValid(mobile_number);
-  isDateValid(reservation_date);
-  isTimeValid(reservation_date, reservation_time);
+  isDateValid(reservation_date, reservation_time);
   isPeopleValid(people);
   if (!errorMessages.length) {
     next();

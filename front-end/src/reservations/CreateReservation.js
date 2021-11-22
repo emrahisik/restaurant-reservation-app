@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import { today } from "../utils/date-time";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert"
@@ -24,12 +23,13 @@ const CreateReservation = () =>{
         setFormData({...formData, [target.name]: target.name === "people" ? Number(target.value) : target.value})
     }; 
 
+   
+
     const submitHandler = async (event) =>{
         event.preventDefault();
         try{
             const ac = new AbortController();
             const reservation = await createReservation(formData, ac.signal);
-            console.log(reservation)
             setFormData({...initialFormData});
             history.push(`/dashboard?date=${reservation.reservation_date}`); 
         }catch(error){
@@ -87,7 +87,6 @@ const CreateReservation = () =>{
                                 className="form-control w-75"
                                 onChange={changeHandler}
                                 value={formData.reservation_date}
-                                min={today()}
                                 required
                                 />
                         </div>
