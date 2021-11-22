@@ -85,6 +85,7 @@ const isMobileValid = (mobile_number) => {
 
 //Validates reservation date and time
 //Date can't be in past and on Tuesdays any time
+//Only reservations between 10:30AM and 9:30PM are accepted
 const isDateValid = (reservation_date, reservation_time) => {
   if (!reservation_date || !Date.parse(reservation_date)) {
     errorMessages.push("reservation_date is either invalid or empty!");
@@ -95,12 +96,19 @@ const isDateValid = (reservation_date, reservation_time) => {
     errorMessages.push("reservation_time is either invalid or empty!");
   };
 
-  const moment = new Date(Date.now());
-  const today = `${moment.getFullYear()}-${moment.getMonth()+1}-${moment.getDate()}`;
-  
-  if(reservation_date < today){
-    errorMessages.push("Chosen date is in the past. Choose a date in the future!");
+  const today = new Date(Date.now());
+  if(date.toString() < today.toString()){
+    errorMessages.push("Chosen date and time is in the past. Choose a date and time in the future!");
   };
+
+  if(reservation_time < "10:30"){
+    console.log(reservation_time)
+    errorMessages.push("The restaurant opens at 10:30AM!")
+  };
+
+  if(reservation_time > "21:30"){
+    errorMessages.push("Reservations after 9:30PM are not accepted!")
+  }
 
   if(date.getDay() == 2){
     errorMessages.push("The restaurant is closed on Tuesdays!")
