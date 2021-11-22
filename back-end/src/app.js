@@ -11,8 +11,9 @@ const notFound = require("./errors/notFound");
 const reservationsRouter = require("./reservations/reservations.router");
 
 const app = express();
-app.use(morgan('tiny'))
+
 app.use(cors());
+app.use(morgan('tiny'))
 app.use(express.json());
 
 app.use("/reservations", reservationsRouter);
