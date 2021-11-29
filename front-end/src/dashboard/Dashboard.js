@@ -133,9 +133,11 @@ const tablesTable = (
       </div>
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={tablesError} />
+      <div className="d-flex flex-wrap">
       <div className="row">
-        <div className="col-7">{reservationsTable}</div>
-        <div className="col-5">{tablesTable}</div>
+        <div className="col-lg-7 ">{reservationsTable}</div>
+        <div className="col-lg-5 ">{tablesTable}</div>
+      </div>
       </div>
     </main>
   );
