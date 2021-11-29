@@ -26,10 +26,15 @@ const update = (data, table_id) => {
             .then(updatedData => updatedData[0]);
 };
 
+const destroy = (table_id) => {
+  return knex("tables").where({table_id}).update({reservation_id: null})
+}
+
 module.exports = {
     list,
     create,
     update,
     read,
     readReservation,
+    destroy
 };
