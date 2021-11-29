@@ -11,7 +11,7 @@ const CreateTable = () => {
     const history = useHistory();
 
     const changeHandler = ({target}) => {
-        setFormData({...formData, [target.name]: target.value})
+        setFormData({...formData, [target.name]: target.name === "capacity" ? Number(target.value) : target.value})
     };
 
     const submitHandler = async (event) => {
