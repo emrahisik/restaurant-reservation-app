@@ -5,6 +5,10 @@ const list = (date) => {
             .where({reservation_date: date });
 }
 
+const read = (reservation_id) => {
+    return knex("reservations").where({reservation_id}).first()
+}
+
 const create = (reservation) => {
     return knex("reservations")
             .insert(reservation)
@@ -15,4 +19,5 @@ const create = (reservation) => {
 module.exports = {
     list,
     create,
+    read,
 }

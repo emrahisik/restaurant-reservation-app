@@ -22,6 +22,20 @@ const reservationDataExists = (req, res, next) => {
   next();
 };
 
+const reservationExists = async (req, res, next) => {
+  const { reservation_id } = req.params;
+  const reservation = await service.read(reservation_id);
+  if(reservation){
+    res.locals.reservation = reservation;
+    return next();
+  }else{
+    next({
+      status: 404,
+      message: `The reservation id ${reservation_id} not found!`
+    })
+  }
+}
+
 //Array of the only valid fields for reservation
 const validFields = [
   "first_name",
@@ -97,7 +111,7 @@ const isDateValid = (reservation_date, reservation_time) => {
   };
 
   const today = new Date(Date.now());
-  if(date.toLocaleString() < today.toLocaleString()){
+  if(date < today){
     errorMessages.push("Chosen date and time is in the past. Choose a date and time in the future!");
   };
 
@@ -174,10 +188,16 @@ async function list(req, res) {
 async function create(req, res) {
   const data = await service.create(req.body.data);
   res.status(201).json({ data });
+};
+
+async function read(req,res) {
+  const { reservation } = res.locals;
+  res.status(200).json({ data: reservation })
 }
 
 module.exports = {
   list: [asyncErrorBoundary(list),],
+  read: [asyncErrorBoundary(reservationExists), read],
   create: [
     reservationDataExists,
     hasOnlyValidFields,
