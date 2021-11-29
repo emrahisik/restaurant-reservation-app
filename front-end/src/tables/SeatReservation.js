@@ -12,41 +12,47 @@ const SeatReservation = () => {
     const [tablesError, setTablesError] = useState(null);
 
     useEffect(() => {
-        const ac = new AbortController();
-        const loadTables = async () => {
-          try {
-            const tableList = await listTables(ac.signal);
-            setTables(tableList);
-          } catch (error) {
-            setTablesError(error);
-          }
-        };
-        loadTables();
-        return () => ac.abort();
-      }, []);
+      const ac = new AbortController();
+      const loadTables = async () => {
+        try {
+          const tableList = await listTables(ac.signal);
+          setTables(tableList);
+        } catch (error) {
+          setTablesError(error);
+        }
+      };
+      loadTables();
+      return () => ac.abort();
+    }, []);
 
     const initialFormData = { table_id: "" };
     const [tableData, setTableData] = useState({ ...initialFormData });
     const [formError, setFormError] = useState(null);
-    const {reservation_id} = useParams()
+    const { reservation_id } = useParams();
 
-const history = useHistory();
-const options = tables.map((table) => <option value={table.table_id} key= {table.table_id}>{table.table_name} - {table.capacity}</option>)
+    const history = useHistory();
+    const options = tables.map((table) => (
+      <option value={table.table_id} key={table.table_id}>
+        {table.table_name} - {table.capacity}
+      </option>
+    ));
 
-const changeHandler = ({target}) => setTableData({...tableData, [target.name]: target.value});
-const submitHandler = async (event) => {
-    event.preventDefault();
-    try {
+    
+
+    const changeHandler = ({ target }) =>
+      setTableData({ ...tableData, [target.name]: target.value });
+    const submitHandler = async (event) => {
+      event.preventDefault();
+      
+      try {
         const ac = new AbortController();
         await updateTable(reservation_id, tableData.table_id, ac.signal);
+        setTableData({ ...initialFormData });
         history.push("/dashboard");
-        setTableData({...initialFormData});
-        
-    } catch (error) {
+      } catch (error) {
         setFormError(error);
-    }
-
-};
+      }
+    };
 
 
 
@@ -59,13 +65,13 @@ const submitHandler = async (event) => {
     <div className="form-group my-3">
       <div className="input-group mb-3">
         <div className="input-group-prepend">
-          <label className="input-group-text" htmlFor="tables">
+          <label className="input-group-text" htmlFor="table_id">
             Tables
           </label>
         </div>
         <select
           className="custom-select"
-          id="tables_id"
+          id="table_id"
           name="table_id"
           onChange={changeHandler}
           defaultValue={"default"}
@@ -73,7 +79,9 @@ const submitHandler = async (event) => {
           <option value="default" disabled>Choose a table...</option>
           {options}
         </select>
-        <button
+      </div>
+      </div>
+      <button
           type="reset"
           className="btn btn-secondary mt-3 mx-3"
           onClick={() => history.goBack()}
@@ -83,8 +91,6 @@ const submitHandler = async (event) => {
         <button type="submit" className="btn btn-primary mt-3">
           Submit
         </button>
-      </div>
-      </div>
     </form>
     </>
   );
