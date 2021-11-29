@@ -111,7 +111,7 @@ const isDateValid = (reservation_date, reservation_time) => {
   };
 
   const today = new Date(Date.now());
-  if(date.toLocaleString() < today.toLocaleString()){
+  if(date < today){
     errorMessages.push("Chosen date and time is in the past. Choose a date and time in the future!");
   };
 
