@@ -117,28 +117,13 @@ const tablesTable = (
   return (
     <main>
       <h1>Dashboard</h1>
-      <button
-        type="button"
-        name="previous"
-        onClick={clickHandler}
-        className="btn btn-dark mr-1"
-      >
+      <button type="button" name="previous" onClick={clickHandler} className="btn btn-dark mr-1">
         <span className="oi oi-arrow-thick-left"></span> Previous
       </button>
-      <button
-        type="button"
-        name="today"
-        onClick={clickHandler}
-        className="btn btn-dark"
-      >
+      <button type="button" name="today" onClick={clickHandler} className="btn btn-dark">
         Today
       </button>
-      <button
-        type="button"
-        name="next"
-        onClick={clickHandler}
-        className="btn btn-dark ml-1"
-      >
+      <button type="button" name="next" onClick={clickHandler} className="btn btn-dark ml-1">
         Next <span className="oi oi-arrow-thick-right"></span>
       </button>
       <div className="d-md-flex my-3">
