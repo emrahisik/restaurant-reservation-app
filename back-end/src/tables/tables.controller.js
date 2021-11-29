@@ -141,7 +141,7 @@ const update = async (req, res, next) => {
     console.log(table)
     const updatedTable = {...table, reservation_id: reservation_id};
     await service.update(updatedTable, table.table_id)
-    res.sendStatus(200)
+    res.json("Update Successful!")
     
 
 }
