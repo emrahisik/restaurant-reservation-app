@@ -15,6 +15,10 @@ const create = (data) => {
             .then(table => table[0]);
 };
 
+const readReservation = (reservation_id) => {
+  return knex("reservations").where({reservation_id}).first()
+}
+
 const update = (data, table_id) => {
     return knex("tables")
             .where({table_id})
@@ -27,4 +31,5 @@ module.exports = {
     create,
     update,
     read,
+    readReservation,
 };
