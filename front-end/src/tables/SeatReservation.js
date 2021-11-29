@@ -41,12 +41,12 @@ const SeatReservation = () => {
 
     const changeHandler = ({ target }) =>
       setTableData({ ...tableData, [target.name]: target.value });
+    
+    
     const submitHandler = async (event) => {
       event.preventDefault();
-      
       try {
-        const ac = new AbortController();
-        await updateTable(reservation_id, tableData.table_id, ac.signal);
+        await updateTable(reservation_id, tableData.table_id);
         setTableData({ ...initialFormData });
         history.push("/dashboard");
       } catch (error) {
