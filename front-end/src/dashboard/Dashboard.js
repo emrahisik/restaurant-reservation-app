@@ -3,6 +3,7 @@ import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { today, next, previous, formatAsTime } from "../utils/date-time"
 
+
 /**
  * Defines the dashboard page.
  * @param date
@@ -74,7 +75,7 @@ const table = tables.map((table,index) => {
         <th scope="row">{index + 1}</th>
         <td>{table.table_name} {reservation.last_name}</td>
         <td>{table.capacity}</td>
-        <td data-table-id-status={table.table_id}>{table.status}</td>
+        <td data-table-id-status={table.table_id}>{table.reservation_id ? "Occupied" : "Free "}</td>
         <td><button className="btn btn-dark py-0" data-table-id-finish={table.table_id}>Finish</button></td>
       </tr>
   )
