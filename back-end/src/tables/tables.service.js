@@ -1,8 +1,12 @@
 const knex =require("../db/connection");
 
 const list = () => {
-    return knex("tables").select("*");
+  return knex("tables").select("*").orderBy("table_name");
 };
+
+const read = (table_id) => {
+  return knex("tables").where({table_id}).first()
+}
 
 const create = (data) => {
     return knex("tables")
@@ -22,4 +26,5 @@ module.exports = {
     list,
     create,
     update,
+    read,
 };
