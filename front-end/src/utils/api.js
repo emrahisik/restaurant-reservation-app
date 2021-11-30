@@ -132,3 +132,16 @@ export async function updateReservationStatus(reservation_id, status){
   };
   return await fetchJson(url,options,[]);
 }
+
+export async function searchReservation(mobile, signal) {
+  console.log("here")
+  const url = `${API_BASE_URL}/reservations?mobile_number=${mobile}`;
+  const options = {
+    headers,
+    signal
+  };
+  console.log(url)
+  return await fetchJson(url, options, [])
+    .then(formatReservationDate)
+    .then(formatReservationTime);
+};
