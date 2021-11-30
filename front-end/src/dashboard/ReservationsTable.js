@@ -70,11 +70,7 @@ const reservationsTable = (
 );
 
 
-  return (
-    
-        <div className="col-lg-7 ">{reservationsTable}</div>
-        
-  );
+  return <div className="col-lg-7 ">{reservationsTable}</div>;
 }
 
 export default ReservationsTable;
