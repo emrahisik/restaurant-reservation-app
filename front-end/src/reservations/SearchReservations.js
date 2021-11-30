@@ -9,22 +9,27 @@ const SearchReservation = () =>{
     const [mobileNumber, setMobileNumber] = useState("");
     const [reservations, setReservations] = useState([]);
     const [searchError, setSearchError] = useState(null);
+    const [notFound, setNotFound] = useState(null)
 
 
 
     const changeHandler = (event) => setMobileNumber(event.target.value);
 
-
     const ac = new AbortController();
     const searchHandler = async (event) => {
-        setReservations([]);
-        //setSearchError(null);
         event.preventDefault();
+        setReservations([]);
+        setNotFound(null);
+        setSearchError(null);
         try {
             const data = await searchReservation(mobileNumber,ac.signal);
             setMobileNumber("");
-            //console.log(reservations)
-            setReservations([...data])
+            if(data.length){
+              setReservations([...data])
+            }else{
+              setNotFound(<h2>No reservations found</h2>);
+            }
+            
         } catch (error) {
             setSearchError(error)
         }
@@ -57,8 +62,7 @@ const SearchReservation = () =>{
       </div>
     );
 
-    const reservationsTable = (reservations.length ? <ReservationsTable reservations={reservations} errorHandler={setSearchError} /> : <h2>No reservations found</h2>)
-
+    const reservationsTable = (reservations.length ? <ReservationsTable reservations={reservations} errorHandler={setSearchError} /> : null)
 
 
     return (
@@ -67,6 +71,7 @@ const SearchReservation = () =>{
         <ErrorAlert error={searchError} />
         {content}
         {reservationsTable}
+        {notFound}
       </div>
     );
 };
