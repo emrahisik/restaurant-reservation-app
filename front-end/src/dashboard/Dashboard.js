@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { deleteReservation, listReservations, listTables } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { today, next, previous } from "../utils/date-time"
 import ReservationsTable from "./ReservationsTable";
+import TablesTable from "./TablesTable";
 
 
 /**
@@ -56,122 +57,6 @@ function Dashboard({ date }) {
     return () => ac.abort();
   }, [updateTables]);
 
-  
-  // const statusHandler = async (event, reservation_id) => {
-  //       try {
-  //         await updateReservationStatus(reservation_id, "seated");
-  //       } catch (error) {
-  //         setReservationsError(error);
-  //       }
-
-  // }
-  
-
-  // const seatButton = (reservation_id, status) => {
-  //   return (
-  //     status === "booked" && (
-  //       <a
-  //         className="btn btn-dark py-0"
-  //         href={`/reservations/${reservation_id}/seat`}
-  //         role="button"
-  //         onClick={(event) => statusHandler(event, reservation_id)}
-  //       >
-  //         Seat
-  //       </a>
-  //     )
-  //   );
-  // };
-
-//   const reservation = reservations.map((reservation, index) => {
-//     return (
-//       <tr className="table-secondary" key={reservation.reservation_id}>
-//         <th scope="row">{index + 1}</th>
-//         <td>{reservation.first_name} {reservation.last_name}</td>
-//         <td>{reservation.mobile_number}</td>
-//         <td>{reservation.reservation_date}</td>
-//         <td>{formatAsTime(reservation.reservation_time)}</td>
-//         <td>{reservation.people}</td>
-//         <td data-reservation-id-status={reservation.reservation_id}>{reservation.status}</td>
-//         <td>{seatButton(reservation.reservation_id, reservation.status)}</td>
-//       </tr>
-//     );
-
-// });
-
-
-// onClick handler pops up a confirmation window (window.confirm)
-// takes the result confirmation and if it is ok, makes and api call to delete id
-// can use a delete control state to fetch the tables list from the backend again
-const deleteHandler = (event, table_id) => {
-  const confirmation = window.confirm("Is this table ready to seat new guests? This cannot be undone.");
-  if(confirmation){
-    (async function(){
-      try {
-        await deleteReservation(table_id);
-        setUpdateTables(!updateTables)
-      } catch (error) {
-        setTablesError(error);
-      }
-    })();
-  }
-}
-
-
-const finishButton = (table_id) => (
-  <button
-    className="btn btn-dark py-0"
-    data-table-id-finish={table_id}
-    onClick={(event) => deleteHandler(event, table_id)}
-  >
-    Finish
-  </button>
-);
-
-const table = tables.map((table,index) => {
-  return (
-    <tr className="table-secondary" key={table.table_id}>
-        <th scope="row">{index + 1}</th>
-        <td>{table.table_name}</td>
-        <td>{table.capacity}</td>
-        <td data-table-id-status={table.table_id}>{table.reservation_id ? "Occupied" : "Free "}</td>
-        <td>{table.reservation_id ? finishButton(table.table_id) : null}</td>
-      </tr>
-  )
-})
-
-
-// const reservationsTable = (
-//   <table className="table table-striped table-light">
-//     <thead className="thead-dark">
-//       <tr>
-//         <th scope="col">#</th>
-//         <th scope="col">Name</th>
-//         <th scope="col">Mobile No</th>
-//         <th scope="col">Date</th>
-//         <th scope="col">Time</th>
-//         <th scope="col">People</th>
-//         <th scope="col">Status</th>
-//         <th scope="col">Seat</th>
-//       </tr>
-//     </thead>
-//     <tbody>{reservation}</tbody>
-//   </table>
-// );
-
-const tablesTable = (
-  <table className="table table-striped table-light">
-    <thead className="thead-dark">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Table Name</th>
-        <th scope="col">Capacity</th>
-        <th scope="col">Status</th>
-        <th scope="col">Finish</th>
-      </tr>
-    </thead>
-    <tbody>{table}</tbody>
-  </table>
-)
 
   return (
     <main>
@@ -194,9 +79,8 @@ const tablesTable = (
       <ErrorAlert error={tablesError} />
       <div className="d-flex flex-wrap">
       <div className="row">
-        {/* <div className="col-lg-7 ">{reservationsTable}</div> */}
         <ReservationsTable reservations={reservations} errorHandler={setReservationsError} />
-        <div className="col-lg-5 ">{tablesTable}</div>
+        <TablesTable tables={tables} errorHandler={setReservationsError} setUpdateTables={setUpdateTables} updateTables={updateTables}/>
       </div>
       </div>
     </main>
