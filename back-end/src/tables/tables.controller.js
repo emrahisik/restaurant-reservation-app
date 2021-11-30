@@ -151,7 +151,6 @@ const create = async (req, res, next) => {
 const update = async (req, res, next) => {
     const { reservation_id } = req.body.data;
     const {table} = res.locals;
-    console.log(table)
     const updatedTable = {...table, reservation_id: reservation_id};
     await service.update(updatedTable, table.table_id)
     res.json("Update Successful!");
