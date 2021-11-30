@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import ReservationsTable from "../dashboard/ReservationsTable";
 import ErrorAlert from "../layout/ErrorAlert";
 import { searchReservation } from "../utils/api";
 
@@ -17,6 +18,7 @@ const SearchReservation = () =>{
     const ac = new AbortController();
     const searchHandler = async (event) => {
         setReservations([]);
+        //setSearchError(null);
         event.preventDefault();
         try {
             const data = await searchReservation(mobileNumber,ac.signal);
@@ -28,39 +30,7 @@ const SearchReservation = () =>{
         }
     }
 
-    const reservation = reservations.map((reservation, index) => {
-        return (
-          <tr className="table-secondary" key={reservation.reservation_id}>
-            <th scope="row">{index + 1}</th>
-            <td>{reservation.first_name} {reservation.last_name}</td>
-            <td>{reservation.mobile_number}</td>
-            <td>{reservation.reservation_date}</td>
-            <td>{(reservation.reservation_time)}</td>
-            <td>{reservation.people}</td>
-            <td data-reservation-id-status={reservation.reservation_id}>{reservation.status}</td>
-            <td>button</td>
-          </tr>
-        );
 
-});
-
-const reservationsTable = (
-    <table className="table table-striped table-light">
-      <thead className="thead-dark">
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Name</th>
-          <th scope="col">Mobile No</th>
-          <th scope="col">Date</th>
-          <th scope="col">Time</th>
-          <th scope="col">People</th>
-          <th scope="col">Status</th>
-          <th scope="col">Seat</th>
-        </tr>
-      </thead>
-      <tbody>{reservation}</tbody>
-    </table>
-  );
 
     const content = (
       <div className="input-group my-3">
@@ -77,7 +47,7 @@ const reservationsTable = (
         <div className="input-group-append">
           <button
             className="btn btn-primary"
-            type="button"
+            type="submit"
             id="button-addon2"
             onClick={searchHandler}
           >
@@ -87,6 +57,7 @@ const reservationsTable = (
       </div>
     );
 
+    const reservationsTable = (reservations.length ? <ReservationsTable reservations={reservations} errorHandler={setSearchError} /> : <h2>No reservations found</h2>)
 
 
 
@@ -94,8 +65,8 @@ const reservationsTable = (
       <div>
         <h2>Search Reservation</h2>
         <ErrorAlert error={searchError} />
-        {reservationsTable}
         {content}
+        {reservationsTable}
       </div>
     );
 };
