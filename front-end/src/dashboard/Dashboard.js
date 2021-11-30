@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { deleteReservation, listReservations, listTables } from "../utils/api";
+import { deleteReservation, listReservations, listTables, updateReservationStatus } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { today, next, previous, formatAsTime } from "../utils/date-time"
 
@@ -16,7 +16,7 @@ function Dashboard({ date }) {
   const [currentDate, setCurrentDate] = useState(date);
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
-  const [updateTableList, setUpdateTableList] = useState(false)
+  const [updateTables, setUpdateTables] = useState(false)
 
   const clickHandler = ({target}) =>{
     if(target.name === "previous"){
@@ -30,7 +30,7 @@ function Dashboard({ date }) {
     };
   };
 
-  useEffect(loadDashboard, [currentDate]);
+  useEffect(loadDashboard, [currentDate, updateTables]);
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -53,24 +53,33 @@ function Dashboard({ date }) {
     };
     loadTables();
     return () => ac.abort();
-  }, [updateTableList]);
+  }, [updateTables]);
 
-  // onClick handler pops up a confirmation window (window.confirm)
-  // takes the result confirmation and if it is ok, makes and api call to delete id
-  // can use a delete control state to fetch the tables list from the backend again
-  const deleteHandler = (event, table_id) => {
-    const confirmation = window.confirm("Is this table ready to seat new guests? This cannot be undone.");
-    if(confirmation){
-      (async function(){
+  
+  const statusHandler = async (event, reservation_id) => {
         try {
-          await deleteReservation(table_id);
-          setUpdateTableList(!updateTableList)
+          await updateReservationStatus(reservation_id, "seated");
         } catch (error) {
-          setTablesError(error);
+          setReservationsError(error);
         }
-      })();
-    }
+
   }
+  
+
+  const seatButton = (reservation_id, status) => {
+    return (
+      status === "booked" && (
+        <a
+          className="btn btn-dark py-0"
+          href={`/reservations/${reservation_id}/seat`}
+          role="button"
+          onClick={(event) => statusHandler(event, reservation_id)}
+        >
+          Seat
+        </a>
+      )
+    );
+  };
 
   const reservation = reservations.map((reservation, index) => {
     return (
@@ -81,11 +90,31 @@ function Dashboard({ date }) {
         <td>{reservation.reservation_date}</td>
         <td>{formatAsTime(reservation.reservation_time)}</td>
         <td>{reservation.people}</td>
-        <td><a className="btn btn-dark py-0" href={`/reservations/${reservation.reservation_id}/seat`} role="button">Seat</a></td>
+        <td data-reservation-id-status={reservation.reservation_id}>{reservation.status}</td>
+        <td>{seatButton(reservation.reservation_id, reservation.status)}</td>
       </tr>
     );
 
 });
+
+
+// onClick handler pops up a confirmation window (window.confirm)
+// takes the result confirmation and if it is ok, makes and api call to delete id
+// can use a delete control state to fetch the tables list from the backend again
+const deleteHandler = (event, table_id) => {
+  const confirmation = window.confirm("Is this table ready to seat new guests? This cannot be undone.");
+  if(confirmation){
+    (async function(){
+      try {
+        await deleteReservation(table_id);
+        setUpdateTables(!updateTables)
+      } catch (error) {
+        setTablesError(error);
+      }
+    })();
+  }
+}
+
 
 const finishButton = (table_id) => (
   <button
@@ -120,6 +149,7 @@ const reservationsTable = (
         <th scope="col">Date</th>
         <th scope="col">Time</th>
         <th scope="col">People</th>
+        <th scope="col">Status</th>
         <th scope="col">Seat</th>
       </tr>
     </thead>

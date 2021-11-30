@@ -123,6 +123,18 @@ const reservationExists = async (req, res, next) => {
   }
 };
 
+const isReservationSeated = (req, res, next) => {
+    const { status } = res.locals.reservation;
+    if(status === "seated"){
+        next({
+            status: 400,
+            message: "Reservation already seated!"
+        });
+    }else{
+        next()
+    }
+}
+
 //Validates that table has enough capacity for eservation
 const enoughCapacity = (req, res, next) => {
     const { table, reservation } = res.locals;
@@ -151,7 +163,6 @@ const create = async (req, res, next) => {
 const update = async (req, res, next) => {
     const { reservation_id } = req.body.data;
     const {table} = res.locals;
-    console.log(table)
     const updatedTable = {...table, reservation_id: reservation_id};
     await service.update(updatedTable, table.table_id)
     res.json("Update Successful!");
@@ -159,13 +170,14 @@ const update = async (req, res, next) => {
 
 const destroy = async (req, res, next) => {
     const { table_id } = req.params;
-    await service.destroy(table_id);
+    const {table:{ reservation_id }} = res.locals;
+    await service.destroy(table_id, reservation_id);
     res.json("delete Successful");
 }
 
 module.exports = {
     list,
     create: [tableDataExists, hasOnlyValidFields, isTableNameValid, isCapacityValid, asyncErrorBoundary(create)],
-    update : [seatDataExists, asyncErrorBoundary(reservationExists), asyncErrorBoundary(tableExists), isTableFree, enoughCapacity, asyncErrorBoundary(update)],
+    update : [seatDataExists, asyncErrorBoundary(reservationExists), isReservationSeated, asyncErrorBoundary(tableExists), isTableFree, enoughCapacity, asyncErrorBoundary(update)],
     delete: [asyncErrorBoundary(tableExists), isTableOccupied, asyncErrorBoundary(destroy)]
 }

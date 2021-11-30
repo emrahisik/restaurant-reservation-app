@@ -43,6 +43,7 @@ const validFields = [
   "mobile_number",
   "reservation_date",
   "reservation_time",
+  "status",
   "people",
 ];
 
@@ -136,6 +137,13 @@ const isPeopleValid = (people) => {
   }
 };
 
+//Validates that status is "booked" by default
+const isStatusValid = (status) => {
+  if(status === "seated" || status === "finished"){
+    errorMessages.push(`Status ${status} is unknown`)
+  }
+};
+
 
 /**
  * hasProperties function invokes validation functions
@@ -155,6 +163,7 @@ const hasProperties = (req, res, next) => {
       reservation_date,
       reservation_time,
       people,
+      status
     },
   } = req.body;
   isFirstNameValid(first_name);
@@ -162,6 +171,7 @@ const hasProperties = (req, res, next) => {
   isMobileValid(mobile_number);
   isDateValid(reservation_date, reservation_time);
   isPeopleValid(people);
+  isStatusValid(status)
   if (!errorMessages.length) {
     next();
   } else {
@@ -173,6 +183,45 @@ const hasProperties = (req, res, next) => {
   }
 };
 
+//Validates that request body exists and has status property
+const statusDataExists = (req, res, next) => {
+  const { data } = req.body;
+  if(!data || !data.status){
+      next({
+          status: 400,
+          message: "status could not acquired!"
+      });
+  }else{
+      return next();
+  }
+};
+
+//Validates that requested data status is either booked, seated, finished or canceled
+const hasValidStatus = (req, res, next) => {
+  const {data: {status} } = req.body;
+  const validStatus = ["booked", "seated", "finished", "canceled"];
+  if(validStatus.includes(status)){
+    next();
+  }else{
+    next({
+      status: 400,
+      message: `Status ${status} is unknown`
+    });
+  };
+};
+
+//Validates that current status of reservation is "booked"
+const isStatusBooked = (req, res, next) => {
+  const {status}  = res.locals.reservation;
+  if(status !== "booked"){
+    next({
+      status: 400,
+      message: `Reservations ${status} cannot be seated!`
+    })
+  }else{
+    return next();
+  }
+}
 
 /**
  * List handler for reservation resources
@@ -180,8 +229,9 @@ const hasProperties = (req, res, next) => {
 // List daily reservations and sort them from earliest to latest
 async function list(req, res) {
   const { date } = req.query;
-  const data = await service.list(date);
-  data.sort((a, b) => (a.reservation_time > b.reservation_time ? 1 : -1));
+  let data = await service.list(date);
+  data = data.filter(({status}) => status!=="finished")
+  // data.sort((a, b) => (a.reservation_time > b.reservation_time ? 1 : -1));
   res.json({ data });
 }
 
@@ -193,6 +243,15 @@ async function create(req, res) {
 async function read(req,res) {
   const { reservation } = res.locals;
   res.status(200).json({ data: reservation })
+};
+
+async function updateStatus(req, res){
+    const { reservation_id } = req.params;
+    const { status } = req.body.data;
+    console.log("dat")
+    const data = await service.updateStatus(reservation_id, status)
+    console.log(data)
+    res.json({data})
 }
 
 module.exports = {
@@ -204,4 +263,5 @@ module.exports = {
     hasProperties,
     asyncErrorBoundary(create),
   ],
+  updateStatus: [asyncErrorBoundary(reservationExists), isStatusBooked, statusDataExists, hasValidStatus, asyncErrorBoundary(updateStatus) ]
 };
