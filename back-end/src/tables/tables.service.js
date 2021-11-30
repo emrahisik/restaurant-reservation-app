@@ -24,20 +24,27 @@ const update = async (data, table_id) => {
     //         .where({table_id})
     //         .update(data,"*")
     //         .then(updatedData => updatedData[0]);
-    await knex.transaction(trx => {
-      trx("tables")
+    await knex.transaction(async trx => {
+      await trx("tables")
         .where({table_id})
         .update(data,"*")
-        .then(updatedData => updatedData[0]);
-      return  trx("reservations")
+      return  await trx("reservations")
       .where({reservation_id: data.reservation_id})
       .update({status: "seated"})
     })
 };
 
-const destroy =  (table_id, reservation_id) => {
-  const statusUpdate = knex("reservations").where({reservation_id}).update({status: "finished"})
-  return knex("tables").where({table_id}).update({reservation_id: null}).then(() => statusUpdate)
+const destroy = async (table_id, reservation_id) => {
+  // const statusUpdate = knex("reservations").where({reservation_id}).update({status: "finished"})
+  // return knex("tables").where({table_id}).update({reservation_id: null}).then(() => statusUpdate)
+
+  //return await knex("reservations").where({reservation_id}).update({status: "finished"})
+  await knex.transaction(async trx => {
+    await trx("tables").where({table_id}).update({reservation_id: null}, "*")
+    return  await trx("reservations")
+    .where({reservation_id})
+    .update({status: "finished"})
+  })
 }
 
 module.exports = {
