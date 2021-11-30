@@ -16,7 +16,7 @@ function Dashboard({ date }) {
   const [currentDate, setCurrentDate] = useState(date);
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
-  const [updateTableList, setUpdateTableList] = useState(false)
+  const [updateTables, setUpdateTables] = useState(false)
 
   const clickHandler = ({target}) =>{
     if(target.name === "previous"){
@@ -30,7 +30,7 @@ function Dashboard({ date }) {
     };
   };
 
-  useEffect(loadDashboard, [currentDate]);
+  useEffect(loadDashboard, [currentDate, updateTables]);
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -53,7 +53,7 @@ function Dashboard({ date }) {
     };
     loadTables();
     return () => ac.abort();
-  }, [updateTableList]);
+  }, [updateTables]);
 
   
   const statusHandler = async (event, reservation_id) => {
@@ -107,7 +107,7 @@ const deleteHandler = (event, table_id) => {
     (async function(){
       try {
         await deleteReservation(table_id);
-        setUpdateTableList(!updateTableList)
+        setUpdateTables(!updateTables)
       } catch (error) {
         setTablesError(error);
       }
