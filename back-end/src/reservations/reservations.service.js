@@ -10,6 +10,15 @@ const read = (reservation_id) => {
     return knex("reservations").where({reservation_id}).first()
 }
 
+const search = (mobile_number) => {
+    return knex("reservations")
+    .whereRaw(
+      "translate(mobile_number, '() -', '') like ?",
+      `%${mobile_number.replace(/\D/g, "")}%`
+    )
+    .orderBy("reservation_date");
+}
+
 const create = (reservation) => {
     return knex("reservations")
             .insert(reservation)
@@ -30,4 +39,5 @@ module.exports = {
     create,
     read,
     updateStatus,
+    search,
 }

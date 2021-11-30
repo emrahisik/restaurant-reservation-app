@@ -223,15 +223,38 @@ const isStatusBooked = (req, res, next) => {
   }
 }
 
+
+const searchQueryExist = (req, res, next) => {
+  const { date, mobile_number } = req.query;
+
+  if(date){
+    res.locals.date = date;
+    next();
+  }else if(mobile_number  && !mobile_number.match(/[A-Za-z]/)){
+    res.locals.mobile_number = mobile_number;
+    next();
+  }else{
+    next({
+      status: 400,
+      message: "Invalid query!"
+    })
+  }
+}
+
+
 /**
  * List handler for reservation resources
  */
 // List daily reservations and sort them from earliest to latest
 async function list(req, res) {
-  const { date } = req.query;
-  let data = await service.list(date);
-  data = data.filter(({status}) => status!=="finished")
-  // data.sort((a, b) => (a.reservation_time > b.reservation_time ? 1 : -1));
+  const { date, mobile_number } = res.locals;
+  let data = ""
+  if(date){
+    data = await service.list(date);
+    data = data.filter(({status}) => status!=="finished")
+  }else if(mobile_number){
+    data = await service.search(mobile_number);
+  }
   res.json({ data });
 }
 
@@ -255,7 +278,7 @@ async function updateStatus(req, res){
 }
 
 module.exports = {
-  list: [asyncErrorBoundary(list),],
+  list: [searchQueryExist, asyncErrorBoundary(list)],
   read: [asyncErrorBoundary(reservationExists), read],
   create: [
     reservationDataExists,
