@@ -18,7 +18,7 @@ const tableDataExists = (req, res, next) => {
 // Validates if request body has only valid fields
 const hasOnlyValidFields = (req, res, next) => {
     const { data } = req.body;
-    const validFields = ["table_name", "capacity"]
+    const validFields = ["table_name", "capacity", "reservation_id"]
     const invalidFields = Object.keys(data).filter((key) => !validFields.includes(key));
     if(!invalidFields.length){
         return next();
@@ -94,6 +94,19 @@ const isTableFree = (req, res, next) => {
     };
 };
 
+//Validates that the table is occupied
+const isTableOccupied = (req, res, next) => {
+    const {table} = res.locals;
+    if(!table.reservation_id){
+        return next({
+            status: 400,
+            message: "The table is not occupied!"
+        });
+    }else{
+        next();
+    };
+};
+
 
 //Validates that reservation id exists
 const reservationExists = async (req, res, next) => {
@@ -141,13 +154,18 @@ const update = async (req, res, next) => {
     console.log(table)
     const updatedTable = {...table, reservation_id: reservation_id};
     await service.update(updatedTable, table.table_id)
-    res.json("Update Successful!")
-    
+    res.json("Update Successful!");
+}
 
+const destroy = async (req, res, next) => {
+    const { table_id } = req.params;
+    await service.destroy(table_id);
+    res.json("delete Successful");
 }
 
 module.exports = {
     list,
     create: [tableDataExists, hasOnlyValidFields, isTableNameValid, isCapacityValid, asyncErrorBoundary(create)],
     update : [seatDataExists, asyncErrorBoundary(reservationExists), asyncErrorBoundary(tableExists), isTableFree, enoughCapacity, asyncErrorBoundary(update)],
+    delete: [asyncErrorBoundary(tableExists), isTableOccupied, asyncErrorBoundary(destroy)]
 }

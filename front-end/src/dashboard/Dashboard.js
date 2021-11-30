@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTables } from "../utils/api";
+import { deleteReservation, listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { today, next, previous, formatAsTime } from "../utils/date-time"
 
@@ -16,6 +16,7 @@ function Dashboard({ date }) {
   const [currentDate, setCurrentDate] = useState(date);
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
+  const [updateTableList, setUpdateTableList] = useState(false)
 
   const clickHandler = ({target}) =>{
     if(target.name === "previous"){
@@ -52,7 +53,24 @@ function Dashboard({ date }) {
     };
     loadTables();
     return () => ac.abort();
-  }, []);
+  }, [updateTableList]);
+
+  // onClick handler pops up a confirmation window (window.confirm)
+  // takes the result confirmation and if it is ok, makes and api call to delete id
+  // can use a delete control state to fetch the tables list from the backend again
+  const deleteHandler = (event, table_id) => {
+    const confirmation = window.confirm("Is this table ready to seat new guests? This cannot be undone.");
+    if(confirmation){
+      (async function(){
+        try {
+          await deleteReservation(table_id);
+          setUpdateTableList(!updateTableList)
+        } catch (error) {
+          setTablesError(error);
+        }
+      })();
+    }
+  }
 
   const reservation = reservations.map((reservation, index) => {
     return (
@@ -69,6 +87,16 @@ function Dashboard({ date }) {
 
 });
 
+const finishButton = (table_id) => (
+  <button
+    className="btn btn-dark py-0"
+    data-table-id-finish={table_id}
+    onClick={(event) => deleteHandler(event, table_id)}
+  >
+    Finish
+  </button>
+);
+
 const table = tables.map((table,index) => {
   return (
     <tr className="table-secondary" key={table.table_id}>
@@ -76,7 +104,7 @@ const table = tables.map((table,index) => {
         <td>{table.table_name} {reservation.last_name}</td>
         <td>{table.capacity}</td>
         <td data-table-id-status={table.table_id}>{table.reservation_id ? "Occupied" : "Free "}</td>
-        <td><button className="btn btn-dark py-0" data-table-id-finish={table.table_id}>Finish</button></td>
+        <td>{table.reservation_id ? finishButton(table.table_id) : null}</td>
       </tr>
   )
 })
