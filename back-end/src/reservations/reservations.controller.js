@@ -139,7 +139,7 @@ const isPeopleValid = (people) => {
 
 //Validates that status is "booked" by default
 const isStatusValid = (status) => {
-  if(status !== "booked"){
+  if(status === "seated" || status === "finished"){
     errorMessages.push(`Status ${status} is unknown`)
   }
 };
