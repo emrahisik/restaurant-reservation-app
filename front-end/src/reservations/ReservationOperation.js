@@ -5,26 +5,14 @@ import ErrorAlert from "../layout/ErrorAlert"
 
 
 
-const ReservationOperation = ({ reservation, isNew }) =>{
-    let initialFormData = {
-      first_name: "",
-      last_name: "",
-      mobile_number: "",
-      reservation_date: "",
-      reservation_time: "",
-      people: "",
-      status:"booked"
-    };
+const ReservationOperation = ({ formData, setFormData, isNew }) =>{
 
-    if(!isNew){
-        delete reservation.created_at;
-        delete reservation.updated_at;
-        initialFormData = reservation;
-    }
-    
-    const [formData, setFormData] = useState(initialFormData);
+
     const [formError, setFormError] = useState(null);
     const history = useHistory()
+
+
+    
 
     //set setFormData as event target key-value pairs
     const changeHandler = ({target}) =>{
@@ -39,11 +27,10 @@ const ReservationOperation = ({ reservation, isNew }) =>{
             const ac = new AbortController();
             if(isNew){
                 await createReservation(formData, ac.signal);
-                setFormData({...initialFormData});
             }else{
                 await updateReservation(formData, ac.signal);
             }
-            history.push(`/dashboard?date=${reservation.reservation_date}`); 
+            history.push(`/dashboard?date=${formData.reservation_date}`); 
         }catch(error){
             setFormError(error) 
         }      
