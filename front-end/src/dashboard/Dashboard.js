@@ -79,7 +79,7 @@ function Dashboard({ date }) {
       <ErrorAlert error={tablesError} />
       <div className="d-flex flex-wrap">
       <div className="row">
-        <ReservationsTable reservations={reservations} errorHandler={setReservationsError} />
+        <ReservationsTable reservations={reservations} errorHandler={setReservationsError} setUpdateTables={setUpdateTables} updateTables={updateTables}/>
         <TablesTable tables={tables} errorHandler={setReservationsError} setUpdateTables={setUpdateTables} updateTables={updateTables}/>
       </div>
       </div>
