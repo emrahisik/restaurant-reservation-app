@@ -202,7 +202,7 @@ const statusDataExists = (req, res, next) => {
 //Validates that requested data status is either booked, seated, finished or canceled
 const hasValidStatus = (req, res, next) => {
   const {data: {status} } = req.body;
-  const validStatus = ["booked", "seated", "finished", "canceled"];
+  const validStatus = ["booked", "seated", "finished", "cancelled"];
   if(validStatus.includes(status)){
     next();
   }else{
@@ -254,7 +254,7 @@ async function list(req, res) {
   let data = ""
   if(date){
     data = await service.list(date);
-    data = data.filter(({status}) => status!=="finished")
+    data = data.filter(({status}) => status!=="finished" && status!=="cancelled")
   }else if(mobile_number){
     data = await service.search(mobile_number);
   }
