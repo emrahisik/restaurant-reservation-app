@@ -115,16 +115,15 @@ export async function searchReservation(mobile, signal) {
 };
 
 
-export async function deleteReservation(table_id, signal){
-  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+export async function cancelReservation(reservation_id){
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
   const options = {
-    method: "DELETE",
+    method: "PUT",
     headers,
-    signal,
+    body: JSON.stringify({data: { status: "cancelled"}}),
   };
   return await fetchJson(url,options,[]);
 }
-
 
 
 export async function listTables(signal){
@@ -159,3 +158,12 @@ export async function updateTable(reservation_id, table_id, signal){
   return await fetchJson(url,options,[]);
 }
 
+export async function deleteReservation(table_id, signal){
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+  const options = {
+    method: "DELETE",
+    headers,
+    signal,
+  };
+  return await fetchJson(url,options,[]);
+}
