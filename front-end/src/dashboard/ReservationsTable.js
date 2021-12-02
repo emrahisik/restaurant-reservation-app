@@ -1,3 +1,5 @@
+import React from "react";
+import { cancelReservation } from "../utils/api";
 import { formatAsTime } from "../utils/date-time"
 
 
@@ -7,7 +9,7 @@ import { formatAsTime } from "../utils/date-time"
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function ReservationsTable({ reservations, errorHandler }) {
+function ReservationsTable({ reservations, errorHandler, setUpdateTables, updateTables  }) {
 
   const seatButton = (reservation_id, status) => {
     return (
@@ -27,12 +29,40 @@ function ReservationsTable({ reservations, errorHandler }) {
     return (
       status === "booked" && (
         <a
+          title="edit"
           className="btn btn-primary py-0"
           href={`/reservations/${reservation_id}/edit`}
           role="button"
         >
           Edit
         </a>
+      )
+    );
+  };
+
+
+  const deleteHandler = async(event, reservation_id) => {
+    try {
+      const confirmation = window.confirm("Do you want to cancel this reservation?\nThis cannot be undone.");
+      if(confirmation){
+        await cancelReservation(reservation_id)
+        setUpdateTables(!updateTables)
+      }
+    } catch (error) {
+      errorHandler(error)
+    }
+  }
+
+  const deleteButton = (reservation_id, status) => {
+    return (
+      status === "booked" && (
+        <button
+          title="delete"
+          className="btn btn-danger py-0"
+          onClick={(event) => deleteHandler(event, reservation_id)}
+        >
+          <span className="oi oi-trash"></span>
+        </button>
       )
     );
   };
@@ -53,6 +83,9 @@ function ReservationsTable({ reservations, errorHandler }) {
         </td>
         <td>{seatButton(reservation.reservation_id, reservation.status)}</td>
         <td>{editButton(reservation.reservation_id, reservation.status)}</td>
+        <td data-reservation-id-cancel={reservation.reservation_id}>
+          {deleteButton(reservation.reservation_id, reservation.status)}
+        </td>
       </tr>
     );
   });
@@ -70,13 +103,14 @@ function ReservationsTable({ reservations, errorHandler }) {
           <th scope="col">Status</th>
           <th scope="col">Seat</th>
           <th scope="col">Edit</th>
+          <th scope="col">Delete</th>
         </tr>
       </thead>
       <tbody>{reservation}</tbody>
     </table>
   );
 
-  return <div className="col-lg-7 ">{reservationsTable}</div>;
+  return <div className="mx-2">{reservationsTable}</div>;
 }
 
 export default ReservationsTable;
