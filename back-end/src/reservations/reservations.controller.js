@@ -45,6 +45,9 @@ const validFields = [
   "reservation_time",
   "status",
   "people",
+  "reservation_id",
+  "created_at",
+  "updated_at",
 ];
 
 /**
@@ -216,7 +219,7 @@ const isStatusBooked = (req, res, next) => {
   if(status !== "booked"){
     next({
       status: 400,
-      message: `Reservations ${status} cannot be seated!`
+      message: `Reservations ${status} cannot be edited/seated!`
     })
   }else{
     return next();
@@ -263,6 +266,13 @@ async function create(req, res) {
   res.status(201).json({ data });
 };
 
+async function update(req, res){
+  const { reservation_id } = req.params;
+  let { data } = req.body;
+  data = await service.update(reservation_id, data)
+  res.json({data})
+}
+
 async function read(req,res) {
   const { reservation } = res.locals;
   res.status(200).json({ data: reservation })
@@ -285,6 +295,14 @@ module.exports = {
     hasOnlyValidFields,
     hasProperties,
     asyncErrorBoundary(create),
+  ],
+  update: [
+    asyncErrorBoundary(reservationExists),
+    isStatusBooked,
+    reservationDataExists,
+    hasOnlyValidFields,
+    hasProperties,
+    asyncErrorBoundary(update),
   ],
   updateStatus: [asyncErrorBoundary(reservationExists), isStatusBooked, statusDataExists, hasValidStatus, asyncErrorBoundary(updateStatus) ]
 };
