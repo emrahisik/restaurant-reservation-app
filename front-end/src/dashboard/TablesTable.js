@@ -68,7 +68,7 @@ const tablesTable = (
   </table>
 )
 
-  return <div className="col-lg-5 ">{tablesTable}</div>;
+  return <div className="mx-2">{tablesTable}</div>;
 }
 
 export default TablesTable;
