@@ -1,5 +1,4 @@
-import React from "react";
-
+import React, { useState } from "react";
 import ReservationOperation from "./ReservationOperation";
 
 
@@ -15,11 +14,13 @@ const CreateReservation = () => {
       people: "",
       status: "booked",
     };
-    
+
+    const [formData, setFormData] = useState({...initialFormData});
+
   return (
     <>
       <h2>Create Reservation</h2>
-      <ReservationOperation initialFormData={initialFormData} isNew={true} />
+      <ReservationOperation formData={formData} setFormData={setFormData} isNew={true} />
     </>
   );
 };

@@ -7,32 +7,42 @@ import ReservationOperation from "./ReservationOperation";
 
 const EditReservation = () => {
 
-    const [reservation, setReservation] = useState({});
+    const initialFormData = {
+        first_name: "",
+        last_name: "",
+        mobile_number: "",
+        reservation_date: "",
+        reservation_time: "",
+        people: "",
+        status: "booked",
+      };
+  
+    const [formData, setFormData] = useState({...initialFormData});
+    // const [reservation, setReservation] = useState({});
     const [updateError, setUpdateError] = useState(null);
     const { reservation_id } = useParams();
 
-    useEffect(()=>{
-        setUpdateError(null);
-        setReservation([]);
-        const ac = new AbortController();
-        const loadReservation = async() => {
-            try {
-                const data = await readReservation(reservation_id, ac.signal);
-                setReservation(data);
-            } catch (error) {
-                setUpdateError(error)
-            }
+    useEffect(() => {
+      const ac = new AbortController();
+      const loadReservation = async () => {
+        try {
+          const reservation = await readReservation(reservation_id, ac.signal);
+          delete reservation.created_at;
+          delete reservation.updated_at;
+          setFormData(reservation);
+        } catch (error) {
+          setUpdateError(error);
         }
-        loadReservation();
-        return () => ac.abort();
-    }, [reservation_id])
-
+      };
+      loadReservation();
+      return () => ac.abort();
+    }, [reservation_id]);
 
   return (
     <>
       <h2>Update Reservation</h2>
       <ErrorAlert error={updateError} />
-      <ReservationOperation reservation={reservation} isNew={false} />
+      <ReservationOperation formData={formData} setFormData={setFormData} isNew={false} />
     </>
   );
 };
