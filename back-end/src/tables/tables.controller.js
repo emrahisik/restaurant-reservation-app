@@ -43,6 +43,20 @@ const isTableNameValid = (req, res, next) => {
   next();
 };
 
+const isTableNameNew = async (req, res, next) => {
+  const tableList = await service.list();
+  const { table_name } = req.body.data;
+  for (const table of tableList) {
+    if (table_name === table.table_name) {
+      next({
+        status: 400,
+        message: `Table ${table_name} already exists!`,
+      });
+    }
+  }
+  next();
+};
+
 //Validates that capacity has value and minimum 1
 const isCapacityValid = (req, res, next) => {
   const { capacity } = req.body.data;
@@ -182,6 +196,7 @@ module.exports = {
     tableDataExists,
     hasOnlyValidFields,
     isTableNameValid,
+    asyncErrorBoundary(isTableNameNew),
     isCapacityValid,
     asyncErrorBoundary(create),
   ],
