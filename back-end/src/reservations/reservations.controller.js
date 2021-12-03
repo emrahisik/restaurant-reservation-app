@@ -69,7 +69,7 @@ const hasOnlyValidFields = (req, res, next) => {
 };
 
 /**
- * A set of validation helper functions is created
+ * A set of validation helper functions are created
  * Each function pushes an error message to error
  * collection array if failure conditions are met
  * Otherwise they process nothing.
