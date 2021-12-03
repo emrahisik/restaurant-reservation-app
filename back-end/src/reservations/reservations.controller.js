@@ -254,12 +254,13 @@ async function list(req, res) {
   let data = "";
   if (date) {
     data = await service.list(date);
-    data = data.filter(
-      ({ status }) => status !== "finished" && status !== "cancelled"
-    );
   } else if (mobile_number) {
     data = await service.search(mobile_number);
-  }
+  };
+  data = data.filter(
+    ({ status }) => status !== "finished" && status !== "cancelled"
+  );
+
   res.json({ data });
 }
 
