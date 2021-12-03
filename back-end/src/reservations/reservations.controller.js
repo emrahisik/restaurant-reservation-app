@@ -6,10 +6,8 @@ const service = require("./reservations.service");
  *
  */
 
-/**
- * Checks if request body exists
- * if not, returns bad request status and error message
- */
+
+//Checks if request body exists
 const reservationDataExists = (req, res, next) => {
   const { data } = req.body;
   if (!data || !Object.keys(data).length) {
@@ -21,6 +19,7 @@ const reservationDataExists = (req, res, next) => {
   next();
 };
 
+//Checks if reservation data exists in database
 const reservationExists = async (req, res, next) => {
   const { reservation_id } = req.params;
   const reservation = await service.read(reservation_id);
@@ -35,7 +34,7 @@ const reservationExists = async (req, res, next) => {
   }
 };
 
-//Array of the only valid fields for reservation
+//Array of valid fields for reservation data
 const validFields = [
   "first_name",
   "last_name",
@@ -49,10 +48,7 @@ const validFields = [
   "updated_at",
 ];
 
-/**
- * Checks if request body has only valid fields
- * if not, returns bad request status and error message
- */
+//Checks if request body has only valid fields
 const hasOnlyValidFields = (req, res, next) => {
   const { data } = req.body;
   const invalidFields = Object.keys(data).filter(
@@ -69,16 +65,15 @@ const hasOnlyValidFields = (req, res, next) => {
 };
 
 /**
- * A set of validation helper functions are created
+ * A set of validation helper functions is created.
  * Each function pushes an error message to error
- * collection array if failure conditions are met
- * Otherwise they process nothing.
+ * collection array if any validation fails
  */
 
-//Create an error message collector
+//Error message collector
 let errorMessages = [];
 
-//Validates firstname
+//Validates first name
 const isFirstNameValid = (first_name) => {
   if (!first_name || !first_name.trim()) {
     errorMessages.push("A first_name is required!");
@@ -100,7 +95,7 @@ const isMobileValid = (mobile_number) => {
 };
 
 //Validates reservation date and time
-//Date can't be in past and on Tuesdays any time
+//Date can't be in the past and on Tuesdays any time
 //Only reservations between 10:30AM and 9:30PM are accepted
 const isDateValid = (reservation_date, reservation_time) => {
   if (!reservation_date || !Date.parse(reservation_date)) {
@@ -149,10 +144,10 @@ const isStatusValid = (status) => {
 };
 
 /**
- * hasProperties function invokes validation functions.
+ * hasProperties middleware function invokes validation functions.
  * After every form submission errorMessages collector
  * is reset to an empty array. If any validation fails,
- * returns a bad request status along with a error message
+ * returns a bad request status along with an error message
  * collection.
  */
 
@@ -201,9 +196,7 @@ const statusDataExists = (req, res, next) => {
 
 //Validates that requested data status is either booked, seated, finished or canceled
 const hasValidStatus = (req, res, next) => {
-  const {
-    data: { status },
-  } = req.body;
+  const { data: { status } } = req.body;
   const validStatus = ["booked", "seated", "finished", "cancelled"];
   if (validStatus.includes(status)) {
     next();
@@ -228,9 +221,10 @@ const isStatusBooked = (req, res, next) => {
   }
 };
 
+//Validates that either date query or phone 
+//number query exists over reservation list
 const searchQueryExist = (req, res, next) => {
   const { date, mobile_number } = req.query;
-
   if (date) {
     res.locals.date = date;
     next();
@@ -248,7 +242,7 @@ const searchQueryExist = (req, res, next) => {
 /**
  * List handler for reservation resources
  */
-// List daily reservations and sort them from earliest to latest
+// Lists reservations
 async function list(req, res) {
   const { date, mobile_number } = res.locals;
   let data = "";
@@ -264,11 +258,13 @@ async function list(req, res) {
   res.json({ data });
 }
 
+//Creates reservation
 async function create(req, res) {
   const data = await service.create(req.body.data);
   res.status(201).json({ data });
 }
 
+//Updates reservations
 async function update(req, res) {
   const { reservation_id } = req.params;
   let { data } = req.body;
@@ -276,11 +272,13 @@ async function update(req, res) {
   res.json({ data });
 }
 
+//Pulls up specified reservation data
 async function read(req, res) {
   const { reservation } = res.locals;
   res.status(200).json({ data: reservation });
 }
 
+//Updates reservation status
 async function updateStatus(req, res) {
   const { reservation_id } = req.params;
   const { status } = req.body.data;
