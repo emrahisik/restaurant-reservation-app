@@ -242,7 +242,7 @@ const searchQueryExist = (req, res, next) => {
 /**
  * List handler for reservation resources
  */
-// Lists reservations
+
 async function list(req, res) {
   const { date, mobile_number } = res.locals;
   let data = "";
@@ -258,13 +258,11 @@ async function list(req, res) {
   res.json({ data });
 }
 
-//Creates reservation
 async function create(req, res) {
   const data = await service.create(req.body.data);
   res.status(201).json({ data });
 }
 
-//Updates reservations
 async function update(req, res) {
   const { reservation_id } = req.params;
   let { data } = req.body;
@@ -272,13 +270,11 @@ async function update(req, res) {
   res.json({ data });
 }
 
-//Pulls up specified reservation data
 async function read(req, res) {
   const { reservation } = res.locals;
   res.status(200).json({ data: reservation });
 }
 
-//Updates reservation status
 async function updateStatus(req, res) {
   const { reservation_id } = req.params;
   const { status } = req.body.data;

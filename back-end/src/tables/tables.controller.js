@@ -43,6 +43,7 @@ const isTableNameValid = (req, res, next) => {
   next();
 };
 
+//Validates that table is created with new name
 const isTableNameNew = async (req, res, next) => {
   const tableList = await service.list();
   const { table_name } = req.body.data;
@@ -69,7 +70,7 @@ const isCapacityValid = (req, res, next) => {
   next();
 };
 
-//Verifies that table exists
+//Validates that table exists
 const tableExists = async (req, res, next) => {
   const { table_id } = req.params;
   const table = await service.read(table_id);
@@ -138,6 +139,7 @@ const reservationExists = async (req, res, next) => {
   }
 };
 
+//Avoids saeting table which's already been seated
 const isReservationSeated = (req, res, next) => {
   const { status } = res.locals.reservation;
   if (status === "seated") {
