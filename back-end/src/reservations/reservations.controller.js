@@ -149,10 +149,10 @@ const isStatusValid = (status) => {
 };
 
 /**
- * hasProperties function invokes validation functions
+ * hasProperties function invokes validation functions.
  * After every form submission errorMessages collector
  * is reset to an empty array. If any validation fails,
- * returns a bad request status along with error message
+ * returns a bad request status along with a error message
  * collection.
  */
 
