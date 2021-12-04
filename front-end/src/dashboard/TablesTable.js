@@ -16,7 +16,7 @@ function TablesTable({ tables, errorHandler, setUpdateTables, updateTables }) {
 // takes the result confirmation and if it is ok, makes and api call to delete id
 // can use a delete control state to fetch the tables list from the backend again
 const deleteHandler = (event, table_id) => {
-  const confirmation = window.confirm("Is this table ready to seat new guests? This cannot be undone.");
+  const confirmation = window.confirm("Is this table ready to seat new guests?\nThis cannot be undone.");
   if(confirmation){
     (async function(){
       try {
