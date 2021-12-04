@@ -16,8 +16,8 @@ const CreateTable = () => {
 
     const submitHandler = async (event) => {
         event.preventDefault();
+        const ac = new AbortController();
         try {
-            const ac = new AbortController();
             await createTable(formData, ac.signal);
             setFormData({...initialForm});
             history.push("/dashboard");

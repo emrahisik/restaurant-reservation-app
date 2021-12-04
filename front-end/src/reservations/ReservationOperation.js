@@ -23,8 +23,8 @@ const ReservationOperation = ({ formData, setFormData, isNew }) =>{
 
     const submitHandler = async (event) =>{
         event.preventDefault();
+        const ac = new AbortController();
         try{
-            const ac = new AbortController();
             if(isNew){
                 await createReservation(formData, ac.signal);
             }else{

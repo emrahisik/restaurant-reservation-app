@@ -15,9 +15,9 @@ const SearchReservation = () =>{
 
     const changeHandler = (event) => setMobileNumber(event.target.value);
 
-    const ac = new AbortController();
     const searchHandler = async (event) => {
         event.preventDefault();
+        const ac = new AbortController();
         setReservations([]);
         setNotFound(null);
         setSearchError(null);
