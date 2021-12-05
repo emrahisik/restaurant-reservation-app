@@ -4,6 +4,12 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { readReservation } from "../utils/api";
 import ReservationOperation from "./ReservationOperation";
 
+/**
+ * Edits an existing reservation invoking the ReservationOperation component.
+ * Fetches the reservation data to be updated and sends to ReservationOperation
+ * 
+ * @returns {JSX.Element}
+ */
 
 const EditReservation = () => {
 
@@ -18,7 +24,6 @@ const EditReservation = () => {
       };
   
     const [formData, setFormData] = useState({...initialFormData});
-    // const [reservation, setReservation] = useState({});
     const [updateError, setUpdateError] = useState(null);
     const { reservation_id } = useParams();
 

@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import ReservationOperation from "./ReservationOperation";
 
-
+/**
+ * Creates a reservation invoking the ReservationOperation component.
+ * 
+ * @returns {JSX.Element}
+ */
 
 const CreateReservation = () => {
 
