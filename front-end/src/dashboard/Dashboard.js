@@ -13,6 +13,7 @@ import TablesTable from "./TablesTable";
  * @returns {JSX.Element}
  */
 function Dashboard({ date }) {
+
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [currentDate, setCurrentDate] = useState(date);
@@ -80,11 +81,11 @@ function Dashboard({ date }) {
       <div className="d-flex flex-wrap">
       <div className="row">
         <ReservationsTable reservations={reservations} errorHandler={setReservationsError} setUpdateTables={setUpdateTables} updateTables={updateTables}/>
-        <TablesTable tables={tables} errorHandler={setReservationsError} setUpdateTables={setUpdateTables} updateTables={updateTables}/>
+        <TablesTable tables={tables} errorHandler={setTablesError} setUpdateTables={setUpdateTables} updateTables={updateTables}/>
       </div>
       </div>
     </main>
   );
-}
+};
 
 export default Dashboard;
