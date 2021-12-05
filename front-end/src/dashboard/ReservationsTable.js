@@ -4,11 +4,19 @@ import { formatAsTime } from "../utils/date-time"
 
 
 /**
- * Defines the dashboard page.
- * @param date
- *  the date for which the user wants to view reservations.
+ * Defines the reservations table on dashboard page.
+ * The table has 3 buttons for each reservation: Seat/Edit/Delete.
+ * @param reservations
+ * the array of reservations
+ * @param errorHandler
+ * sets the error returned by the api response to the dashboard (parent) component.
+ * @param setUpdateTables
+ * each time a reservation cancelled changes updateTables status to re-render reservation's table.
+ * @param updateTables
+ * a boolean prop, which is a state variable controls the useEffect to re-render reservation's table.
  * @returns {JSX.Element}
  */
+
 function ReservationsTable({ reservations, errorHandler, setUpdateTables, updateTables  }) {
 
   const seatButton = (reservation_id, status) => {
@@ -51,7 +59,7 @@ function ReservationsTable({ reservations, errorHandler, setUpdateTables, update
     } catch (error) {
       errorHandler(error)
     }
-  }
+  };
 
   const deleteButton = (reservation_id, status) => {
     return (
@@ -111,6 +119,6 @@ function ReservationsTable({ reservations, errorHandler, setUpdateTables, update
   );
 
   return <div className="mx-2">{reservationsTable}</div>;
-}
+};
 
 export default ReservationsTable;
