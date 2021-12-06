@@ -3,6 +3,11 @@ import { createTable } from "../utils/api";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 
+/**
+ * Creates a new table
+ * @returns {JSX.Element}
+ */
+
 const CreateTable = () => {
 
     const initialForm = { table_name: "", capacity: ""};
@@ -24,9 +29,7 @@ const CreateTable = () => {
         } catch (error) {
             setTableError(error);
         }
-    }
-
-
+    };
 
     const form = (
       <form onSubmit={submitHandler}>

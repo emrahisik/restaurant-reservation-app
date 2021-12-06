@@ -3,10 +3,13 @@ import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { updateTable, listTables } from "../utils/api";
 
+/**
+ * renders Seat page with a dropdown menu for all tables exist
+ * 
+ * @returns {JSX.Element}
+ */
 
 const SeatReservation = () => {
-
-
 
     const [tables, setTables] = useState([]);
     const [tablesError, setTablesError] = useState(null);
@@ -37,8 +40,6 @@ const SeatReservation = () => {
       </option>
     ));
 
-    
-
     const changeHandler = ({ target }) =>
       setTableData({ ...tableData, [target.name]: target.value });
     
@@ -53,9 +54,6 @@ const SeatReservation = () => {
         setFormError(error);
       }
     };
-
-
-
 
   return (
     <>
