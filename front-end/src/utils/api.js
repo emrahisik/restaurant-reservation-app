@@ -68,15 +68,16 @@ export async function listReservations(params, signal) {
     .then(formatReservationTime);
 };
 
-
+//Requests the specified reservation data from the backend
 export async function readReservation(reservation_id, signal){
   const url = `${API_BASE_URL}/reservations/${reservation_id}`;
   return await fetchJson(url,{headers, signal},[])    
   .then(formatReservationDate)
   .then(formatReservationTime);
-}
+};
 
-
+//Makes a post request to backend to create new resrvation.
+//Sends a reservation data object to backend
 export async function createReservation(reservation,signal){
   const url = `${API_BASE_URL}/reservations`;
   const options = {
@@ -90,6 +91,7 @@ export async function createReservation(reservation,signal){
     .then(formatReservationTime);
 };
 
+//Sends an update data object for an existing reservation 
 export async function updateReservation(reservation, signal){
   const url = `${API_BASE_URL}/reservations/${reservation.reservation_id}`;
   const options = {
@@ -99,8 +101,9 @@ export async function updateReservation(reservation, signal){
     signal,
   };
   return await fetchJson(url,options,[]);
-}
+};
 
+//Queries and retrieves reservation data matching the specified mobile number
 export async function searchReservation(mobile, signal) {
   console.log("here")
   const url = `${API_BASE_URL}/reservations?mobile_number=${mobile}`;
@@ -114,7 +117,7 @@ export async function searchReservation(mobile, signal) {
     .then(formatReservationTime);
 };
 
-
+//Sends a status update to "cancelled" for specified reservation
 export async function cancelReservation(reservation_id){
   const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
   const options = {
@@ -123,9 +126,9 @@ export async function cancelReservation(reservation_id){
     body: JSON.stringify({data: { status: "cancelled"}}),
   };
   return await fetchJson(url,options,[]);
-}
+};
 
-
+//Retrieves a list of tables
 export async function listTables(signal){
   const url = `${API_BASE_URL}/tables`;
   const options = {
@@ -134,8 +137,9 @@ export async function listTables(signal){
     signal,
   };
   return await fetchJson(url,options,[]);
-}
+};
 
+//Makes a post request with table data to backend
 export async function createTable(table, signal){
   const url = `${API_BASE_URL}/tables`;
   const options = {
@@ -145,8 +149,9 @@ export async function createTable(table, signal){
     signal,
   };
   return await fetchJson(url,options,[]);
-}
+};
 
+//Updates specified table's reservation_id column from null to specified reservation_id
 export async function updateTable(reservation_id, table_id, signal){
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   const options = {
@@ -156,8 +161,9 @@ export async function updateTable(reservation_id, table_id, signal){
     signal,
   };
   return await fetchJson(url,options,[]);
-}
+};
 
+//Makes a delete request for specified table to delete the reservation from the table
 export async function deleteReservation(table_id, signal){
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   const options = {
@@ -166,4 +172,4 @@ export async function deleteReservation(table_id, signal){
     signal,
   };
   return await fetchJson(url,options,[]);
-}
+};
