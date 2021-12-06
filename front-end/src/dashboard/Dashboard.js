@@ -58,6 +58,12 @@ function Dashboard({ date }) {
     return () => ac.abort();
   }, [updateTables]);
 
+  let reservationDate = new Date(currentDate);
+  reservationDate = new Date(
+    reservationDate.getUTCFullYear(),
+    reservationDate.getUTCMonth(),
+    reservationDate.getUTCDate()
+  ).toDateString();
 
   return (
     <main>
@@ -73,7 +79,7 @@ function Dashboard({ date }) {
       </button>
       <div className="d-md-flex my-3">
         <h4 className="mb-0">
-          Reservations for {new Date(currentDate + "GMT-5").toDateString()}
+          Reservations for {reservationDate}
         </h4>
       </div>
       <ErrorAlert error={reservationsError} />
