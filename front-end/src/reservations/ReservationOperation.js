@@ -3,23 +3,29 @@ import { useHistory } from "react-router-dom";
 import { createReservation, updateReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert"
 
-
+/**
+ * ReservationOperation is a single form component rendered 
+ * conditionally by CreateReservation and EditReservation routes.
+ * @param formData
+ * formData prop is a state variable passed down by either 
+ * CreateReservation or EditReservation components
+ * @param setFormData
+ * setFormData prop is a state variable controller that lifts up 
+ * the new formData to parent components
+ * @param isNew
+ * a boolean determiner which is when true ReservationOperation renders as a new reservation
+ * form, else it renders as an update form.
+ * @returns {JSX.Element}
+ */
 
 const ReservationOperation = ({ formData, setFormData, isNew }) =>{
 
-
     const [formError, setFormError] = useState(null);
-    const history = useHistory()
+    const history = useHistory();
 
-
-    
-
-    //set setFormData as event target key-value pairs
     const changeHandler = ({target}) =>{
         setFormData({...formData, [target.name]: target.name === "people" ? Number(target.value) : target.value})
     }; 
-
-   
 
     const submitHandler = async (event) =>{
         event.preventDefault();
