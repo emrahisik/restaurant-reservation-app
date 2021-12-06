@@ -57,8 +57,8 @@ const table = tables.map((table,index) => {
 
 
 const tablesTable = (
-  <table className="table table-striped table-light">
-    <thead className="thead-dark">
+  <table className="table">
+    <thead className="thead">
       <tr>
         <th scope="col">#</th>
         <th scope="col">Table Name</th>

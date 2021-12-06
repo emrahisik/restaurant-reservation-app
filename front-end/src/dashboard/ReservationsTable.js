@@ -99,8 +99,8 @@ function ReservationsTable({ reservations, errorHandler, setUpdateTables, update
   });
 
   const reservationsTable = (
-    <table className="table table-striped table-light">
-      <thead className="thead-dark">
+    <table className="table">
+      <thead className="thead">
         <tr>
           <th scope="col">#</th>
           <th scope="col">Name</th>
