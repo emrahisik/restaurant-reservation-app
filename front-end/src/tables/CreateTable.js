@@ -60,7 +60,7 @@ const CreateTable = () => {
             />
           </div>
         </div>
-        <button type="reset" className="btn btn-secondary mt-3 mx-3" onClick={() => history.goBack()}>Cancel</button>
+        <button type="reset" className="btn btn-secondary mt-3 mr-3" onClick={() => history.goBack()}>Cancel</button>
         <button type="submit" className="btn btn-primary mt-3" >Submit</button>
       </form>
     );
