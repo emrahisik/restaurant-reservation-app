@@ -68,7 +68,7 @@ const CreateTable = () => {
     return (
         <div>
             <ErrorAlert error={tableError}/>
-            <h2>Create Table</h2>
+            <h1>Create Table</h1>
             {form}
         </div>
     )

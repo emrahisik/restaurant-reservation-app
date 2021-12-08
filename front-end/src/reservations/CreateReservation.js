@@ -23,7 +23,7 @@ const CreateReservation = () => {
 
   return (
     <>
-      <h2>Create Reservation</h2>
+      <h1>Create Reservation</h1>
       <ReservationOperation formData={formData} setFormData={setFormData} isNew={true} />
     </>
   );

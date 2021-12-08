@@ -73,7 +73,7 @@ const SearchReservation = () =>{
 
     return (
       <div>
-        <h2>Search Reservation</h2>
+        <h1>Search Reservation</h1>
         <ErrorAlert error={searchError} />
         {content}
         {reservationsTable}

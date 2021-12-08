@@ -45,7 +45,7 @@ const EditReservation = () => {
 
   return (
     <>
-      <h2>Update Reservation</h2>
+      <h1>Update Reservation</h1>
       <ErrorAlert error={updateError} />
       <ReservationOperation formData={formData} setFormData={setFormData} isNew={false} />
     </>
