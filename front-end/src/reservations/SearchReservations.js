@@ -39,7 +39,7 @@ const SearchReservation = () =>{
     };
 
     const content = (
-      <div className="input-group my-3">
+      <div className="input-group my-3 w-50">
         <input
           type="text"
           className="form-control"
