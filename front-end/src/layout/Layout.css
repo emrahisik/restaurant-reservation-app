@@ -1,4 +1,55 @@
+*{
+  font-family: 'Ubuntu', sans-serif;
+}
+
+html{
+  min-height: 100%;
+}
+
+body{
+  color: white;
+  background: linear-gradient(#252525 0%, #000 100%);
+  min-height: 100%;
+}
+
+.navbar{
+background-color: black;
+}
 .side-bar {
-  background-color: #393a44;
+  background-color: #000000;
   min-width: 200px;
+  min-height: 100%;
+}
+
+.btn.btn-dark {
+  background: #6807f9;
+  border-color: #6807f9;
+  color: #fff; 
+}
+
+.btn.btn-primary {
+  background: #0da000;
+  border-color: #0da000;
+}
+
+table, .table{
+  box-sizing: border-box;
+  border: 1px solid #c24311;
+  border-radius: 3px 3px 0 0 ;
+}
+.table{
+  border-radius: 3px;
+}
+
+.table .thead th{
+  background: #c24311;
+  border-color: #c24311;
+  color: #000000;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.table-secondary, .table-secondary>td, .table-secondary>th{
+  background: #000000;
+  color: white;
+  border-color: #c24311;
 }

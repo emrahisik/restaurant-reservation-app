@@ -3,6 +3,11 @@ import { createTable } from "../utils/api";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 
+/**
+ * Creates a new table
+ * @returns {JSX.Element}
+ */
+
 const CreateTable = () => {
 
     const initialForm = { table_name: "", capacity: ""};
@@ -16,17 +21,15 @@ const CreateTable = () => {
 
     const submitHandler = async (event) => {
         event.preventDefault();
+        const ac = new AbortController();
         try {
-            const ac = new AbortController();
             await createTable(formData, ac.signal);
             setFormData({...initialForm});
             history.push("/dashboard");
         } catch (error) {
             setTableError(error);
         }
-    }
-
-
+    };
 
     const form = (
       <form onSubmit={submitHandler}>
@@ -57,7 +60,7 @@ const CreateTable = () => {
             />
           </div>
         </div>
-        <button type="reset" className="btn btn-secondary mt-3 mx-3" onClick={() => history.goBack()}>Cancel</button>
+        <button type="reset" className="btn btn-secondary mt-3 mr-3" onClick={() => history.goBack()}>Cancel</button>
         <button type="submit" className="btn btn-primary mt-3" >Submit</button>
       </form>
     );
@@ -65,7 +68,7 @@ const CreateTable = () => {
     return (
         <div>
             <ErrorAlert error={tableError}/>
-            <h2>Create Table</h2>
+            <h1>Create Table</h1>
             {form}
         </div>
     )

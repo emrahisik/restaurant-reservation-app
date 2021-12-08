@@ -13,6 +13,7 @@ import TablesTable from "./TablesTable";
  * @returns {JSX.Element}
  */
 function Dashboard({ date }) {
+
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [currentDate, setCurrentDate] = useState(date);
@@ -57,6 +58,12 @@ function Dashboard({ date }) {
     return () => ac.abort();
   }, [updateTables]);
 
+  let reservationDate = new Date(currentDate);
+  reservationDate = new Date(
+    reservationDate.getUTCFullYear(),
+    reservationDate.getUTCMonth(),
+    reservationDate.getUTCDate()
+  ).toDateString();
 
   return (
     <main>
@@ -72,19 +79,19 @@ function Dashboard({ date }) {
       </button>
       <div className="d-md-flex my-3">
         <h4 className="mb-0">
-          Reservations for {new Date(currentDate + "GMT-5").toDateString()}
+          Reservations for {reservationDate}
         </h4>
       </div>
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={tablesError} />
       <div className="d-flex flex-wrap">
       <div className="row">
-        <ReservationsTable reservations={reservations} errorHandler={setReservationsError} />
-        <TablesTable tables={tables} errorHandler={setReservationsError} setUpdateTables={setUpdateTables} updateTables={updateTables}/>
+        <ReservationsTable reservations={reservations} errorHandler={setReservationsError} setUpdateTables={setUpdateTables} updateTables={updateTables}/>
+        <TablesTable tables={tables} errorHandler={setTablesError} setUpdateTables={setUpdateTables} updateTables={updateTables}/>
       </div>
       </div>
     </main>
   );
-}
+};
 
 export default Dashboard;

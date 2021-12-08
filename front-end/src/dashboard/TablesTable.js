@@ -4,19 +4,23 @@ import { deleteReservation } from "../utils/api";
 
 
 /**
- * Defines the dashboard page.
- * @param date
- *  the date for which the user wants to view reservations.
+ * Defines the tables table on dashboard page.
+ * The table has only one button for each table: Finish.
+ * @param tables
+ * the array of tables
+ * @param errorHandler
+ * sets the error returned by the api response to the dashboard (parent) component.
+ * @param setUpdateTables
+ * each time a reservation cancelled changes updateTables status to re-render table's table.
+ * @param updateTables
+ * a boolean prop, which is a state variable controls the useEffect to re-render table's table.
  * @returns {JSX.Element}
  */
+
 function TablesTable({ tables, errorHandler, setUpdateTables, updateTables }) {
 
-
-// onClick handler pops up a confirmation window (window.confirm)
-// takes the result confirmation and if it is ok, makes and api call to delete id
-// can use a delete control state to fetch the tables list from the backend again
 const deleteHandler = (event, table_id) => {
-  const confirmation = window.confirm("Is this table ready to seat new guests? This cannot be undone.");
+  const confirmation = window.confirm("Is this table ready to seat new guests?\nThis cannot be undone.");
   if(confirmation){
     (async function(){
       try {
@@ -27,8 +31,7 @@ const deleteHandler = (event, table_id) => {
       }
     })();
   }
-}
-
+};
 
 const finishButton = (table_id) => (
   <button
@@ -49,13 +52,13 @@ const table = tables.map((table,index) => {
         <td data-table-id-status={table.table_id}>{table.reservation_id ? "Occupied" : "Free "}</td>
         <td>{table.reservation_id ? finishButton(table.table_id) : null}</td>
       </tr>
-  )
-})
+  );
+});
 
 
 const tablesTable = (
-  <table className="table table-striped table-light">
-    <thead className="thead-dark">
+  <table className="table">
+    <thead className="thead">
       <tr>
         <th scope="col">#</th>
         <th scope="col">Table Name</th>
@@ -66,9 +69,9 @@ const tablesTable = (
     </thead>
     <tbody>{table}</tbody>
   </table>
-)
+);
 
-  return <div className="col-lg-5 ">{tablesTable}</div>;
-}
+  return <div className="mx-2">{tablesTable}</div>;
+};
 
 export default TablesTable;
