@@ -45,7 +45,7 @@ Restaurant Reservation App is a PERN stack application built for restaurant pers
 
 
 ## Technology used
-The application was built on PERN stack. On the front-end side, the app was created using React JS library along with Boostrap CSS to style. RestfFUL APIs were created on Express framework on Node.js. Knex library was used to built the connection between the database and the server.
+The application was built on PERN stack. On the front-end side, the app was created using React JS library along with Boostrap CSS to style. RESTful APIs were created on Express framework on Node.js. Knex library was used to built the connection between the database and the server.
 
 ## Database setup
 
