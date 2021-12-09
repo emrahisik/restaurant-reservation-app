@@ -30,18 +30,18 @@ Restaurant Reservation App is a PERN stack application built for restaurant pers
 
 ## Existing API Endpoints
 
-|         API Endpoint|     | Description                                                      |
-| ------ | ------------------------------ | ---------------------------------------------------------------- |
-| `GET`   | `/reservations?date={date}`   | Retrieves all reservations on specified date |
-| `GET`   | `/reservations?mobile_number={mobile_number}`   | Retrieves all reservations matching mobile number |
-| `POST`   | `/reservations`   | Creates new reservation |
-| `GET`   | `/reservations/:reservation_id`   | Retrieves reservation specified by id|
-| `PUT`   | `/reservations/:reservation_id`   | Updates reservation specified by id|
-| `PUT`   | `/reservations/:reservation_id/status`   | Updates status of reservation specified by id| 
-| `GET`   | `/tables`   | Retrieves all tables in database |
-| `POST`   | `/tables`   | Creates new table | 
-| `PUT`   | `/tables/:table_id/seat`   | Adds reservation_id to table specified by id |
-| `DELETE`   | `/tables/:table_id/seat`   | Removes reservation_id from table specified by id |
+|         API Endpoint     | Description                                                      |
+| ------------------------------------ | ---------------------------------------------------------------- |
+| `GET`    `/reservations?date={date}`   | Retrieves all reservations on specified date |
+| `GET`    `/reservations?mobile_number={mobile_number}`   | Retrieves all reservations matching mobile number |
+| `POST`    `/reservations`   | Creates new reservation |
+| `GET`    `/reservations/:reservation_id`   | Retrieves reservation specified by id|
+| `PUT`    `/reservations/:reservation_id`   | Updates reservation specified by id|
+| `PUT`    `/reservations/:reservation_id/status`   | Updates status of reservation specified by id| 
+| `GET`    `/tables`   | Retrieves all tables in database |
+| `POST`    `/tables`   | Creates new table | 
+| `PUT`    `/tables/:table_id/seat`   | Adds reservation_id to table specified by id |
+| `DELETE`   `/tables/:table_id/seat`   | Removes reservation_id from table specified by id |
 
 
 ## Technology used
