@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom"
 import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import { today, next, previous } from "../utils/date-time"
@@ -16,29 +17,29 @@ function Dashboard({ date }) {
 
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const [currentDate, setCurrentDate] = useState(date);
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
   const [updateTables, setUpdateTables] = useState(false)
+  const history = useHistory()
 
   const clickHandler = ({target}) =>{
     if(target.name === "previous"){
-      setCurrentDate(previous(currentDate));
+      history.push(`/dashboard?date=${previous(date)}`);
     };
     if(target.name === "today"){
-      setCurrentDate(today());
+      history.push(`/dashboard?date=${today()}`);
     };
     if(target.name === "next"){
-      setCurrentDate(next(currentDate));
+      history.push(`/dashboard?date=${next(date)}`);
     };
   };
 
-  useEffect(loadDashboard, [currentDate, updateTables]);
+  useEffect(loadDashboard, [date, updateTables]);
 
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
-    listReservations({ date:currentDate }, abortController.signal)
+    listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
@@ -58,7 +59,7 @@ function Dashboard({ date }) {
     return () => ac.abort();
   }, [updateTables]);
 
-  let reservationDate = new Date(currentDate);
+  let reservationDate = new Date(date);
   reservationDate = new Date(
     reservationDate.getUTCFullYear(),
     reservationDate.getUTCMonth(),
