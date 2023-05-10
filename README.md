@@ -1,6 +1,6 @@
 # Periodic Tables - Restaurant Reservation App
 
-### Application link: https://pertab-reservation-app-client.herokuapp.com/dashboard
+### Application link: [Periodic Table](https://restaurant-reservation-app-alpha.vercel.app)
 
 Restaurant Reservation App is a PERN stack application built for restaurant personnel's use where they can manage all reservations and tables via the app. A user can:
 - list all existing reservations and tables
